@@ -1,6 +1,7 @@
 package ru.restaurantVoting.util;
 
 
+import ru.restaurantVoting.model.AbstractBaseEntity;
 import ru.restaurantVoting.util.exception.NotFoundException;
 
 public class ValidationUtil {
@@ -25,5 +26,21 @@ public class ValidationUtil {
         if (!found) {
             throw new NotFoundException("Not found entity with " + msg);
         }
+    }
+
+    public static void checkNew(AbstractBaseEntity entity) {
+        if (!entity.isNew()) {
+            throw new IllegalArgumentException(entity + " must be new (id=null)");
+        }
+    }
+
+    public static Throwable getRootCause(Throwable t) {
+        Throwable result = t;
+        Throwable cause;
+
+        while (null != (cause = result.getCause()) && (result != cause)) {
+            result = cause;
+        }
+        return result;
     }
 }

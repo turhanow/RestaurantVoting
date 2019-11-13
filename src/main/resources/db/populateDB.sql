@@ -1,38 +1,45 @@
-DELETE FROM VOTE;
-DELETE FROM DISH;
-DELETE FROM MENU;
-DELETE FROM USERS;
-ALTER SEQUENCE global_sequence RESTART WITH 100000;
+DELETE
+FROM VOTE;
+DELETE
+FROM DISH;
+DELETE
+FROM RESTAURANT;
+DELETE
+FROM MENU;
+DELETE
+FROM USERS;
+ALTER SEQUENCE global_seq RESTART WITH 100000;
 
-INSERT INTO USERS (ID, PASSWORD, EMAIL, REGISTERED, ENABLE) VALUES
-(0, 'user_password', 'user@email.com', '2019-04-23 10:00:00', TRUE),
-(1, 'admin_password', 'admin@email.com', '2019-04-23 12:00:00', TRUE);
+INSERT INTO USERS (NAME, PASSWORD, EMAIL, REGISTERED)
+VALUES ('User', 'user_password', 'user@email.com', '2019-04-23 10:00:00'),
+       ('Admin', 'admin_password', 'admin@email.com', '2019-04-23 12:00:00');
 
-INSERT INTO user_roles (user_id, role) VALUES
-(0, 'ROLE_USER'),
-(1, 'ROLE_ADMIN');
+INSERT INTO user_roles (user_id, role)
+VALUES (100000, 'ROLE_USER'),
+       (100001, 'ROLE_USER'),
+       (100001, 'ROLE_ADMIN');
 
-INSERT INTO RESTAURANT (ID, NAME) VALUES
-(2, 'KFC'),
-(3, 'McDonalds'),
-(4, 'BurgerKing');
+INSERT INTO RESTAURANT (NAME)
+VALUES ('KFC'),
+       ('McDonalds'),
+       ('BurgerKing');
 
-INSERT INTO MENU (ID,  MENU_DATE, RESTAURANT_ID) VALUES
-(10, '2019-04-19', 2),
-(11, '2019-04-20', 3),
-(12, '2019-06-11', 3),
-(13, '2019-06-11', 4),
-(14, '2019-06-12', 2);
+INSERT INTO MENU (MENU_DATE, RESTAURANT_ID)
+VALUES ('2019-04-19', 100002),
+       ('2019-04-20', 100003),
+       ('2019-06-11', 100003),
+       ('2019-06-11', 100004),
+       ('2019-06-12', 100002);
 
-INSERT INTO DISH (ID, NAME, PRICE, MENU_ID) VALUES
-(100, 'Steak', 100000,10),
-(101, 'Hamburger', 10000, 11),
-(102, 'Bugs', 20000, 12),
-(103, 'McSteak', 11100, 12),
-(104, 'McVine', 22200, 12),
-(105, 'Takoburger', 33300, 13);
+INSERT INTO DISH (NAME, PRICE, MENU_ID)
+VALUES ('Steak', 100000, 100005),
+       ('Hamburger', 10000, 100006),
+       ('Bugs', 20000, 100007),
+       ('McSteak', 11100, 100007),
+       ('McVine', 22200, 100007),
+       ('Takoburger', 33300, 100008);
 
-INSERT INTO VOTE (ID, VOTE_DATE, USER_ID, MENU_ID) VALUES
-(200, '2019-04-20', 0, 11),
-(201, '2019-04-20', 1, 11),
-(203, '3019-06-11', 0, 12);
+INSERT INTO VOTE (VOTE_DATE, USER_ID, MENU_ID)
+VALUES ('2019-04-20', 100000, 100006),
+       ('2019-04-20', 100001, 100006),
+       ('3019-06-11', 100000, 100007);
