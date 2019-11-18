@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantVoting.model.Menu;
-import ru.restaurantVoting.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,8 +21,8 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @Query("SELECT m FROM Menu m WHERE m.date=:date")
     List<Menu> findByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
 
-    @Query("SELECT m FROM Menu m WHERE m.restaurant=:restaurant")
-    List<Menu> findByRestaurant(@Param("restaurant") Restaurant restaurant);
+    @Query("SELECT m FROM Menu m WHERE m.restaurant.id=:restaurant_id")
+    List<Menu> findByRestaurant(@Param("restaurant_id") int restaurant_id);
 
     @Override
     @Transactional
@@ -33,4 +32,8 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @Transactional
     @Query("DELETE FROM Menu m WHERE m.id=:id AND m.restaurant.id=:restaurant_id")
     int delete(@Param("id") int id, @Param("restaurant_id") int restaurant_id);
+
+    @Query("SELECT m FROM Menu m WHERE m.id=:id AND m.restaurant.id=:restaurant_id")
+    Menu get(@Param("id") int id, @Param("restaurant_id") int restaurant_id);
+
 }

@@ -1,4 +1,4 @@
-package ru.restaurantVoting;
+package ru.restaurantVoting.data;
 
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.restaurantVoting.model.Role;
@@ -19,7 +19,7 @@ public class UserTestData {
     public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@email.com", "admin_password", Role.ROLE_ADMIN, Role.ROLE_USER);
 
     public static void assertMatch(User actual, User expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered");
+        assertThat(actual).isEqualTo(expected);
     }
 
     public static void assertMatch(Iterable<User> actual, User... expected) {
@@ -27,7 +27,7 @@ public class UserTestData {
     }
 
     public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("registered").isEqualTo(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
     public static ResultMatcher contentJson(User... expected) {

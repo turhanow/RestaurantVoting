@@ -11,6 +11,9 @@ import static ru.restaurantVoting.util.DateTimeUtil.parseLocalDate;
 import static ru.restaurantVoting.util.DateTimeUtil.parseLocalTime;
 
 public class DateTimeFormatters {
+    private DateTimeFormatters() {
+    }
+
     public static class LocalDateFormatter implements Formatter<LocalDate> {
 
         @Override

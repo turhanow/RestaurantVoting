@@ -1,8 +1,8 @@
 package ru.restaurantVoting.model;
 
-import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -22,6 +22,18 @@ public class Vote extends AbstractBaseEntity {
     @NotNull
     @Column(name = "vote_date", nullable = false)
     private LocalDate date;
+
+    public Vote() {
+    }
+
+    public Vote(Vote v) {
+        this(v.getId(), v.getDate());
+    }
+
+    public Vote(Integer id, LocalDate date) {
+        super(id);
+        this.date = date;
+    }
 
     public User getUser() {
         return user;

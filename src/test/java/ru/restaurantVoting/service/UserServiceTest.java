@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.restaurantVoting.UserTestData.*;
+import static ru.restaurantVoting.data.UserTestData.*;
 
 class UserServiceTest extends AbstractServiceTest {
 

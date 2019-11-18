@@ -1,30 +1,34 @@
 package ru.restaurantVoting.model;
 
-import com.sun.istack.NotNull;
+
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"menu_id", "name"}, name = "unique_dish")})
 public class Dish extends AbstractNamedEntity {
     @Column(name = "price", nullable = false)
+    @Range(min = 1)
     private int price;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "menu_id", nullable = false)
     @NotNull
     private Menu menu;
 
 
-    public Dish(int price, Menu menu) {
-        this.price = price;
-        this.menu = menu;
+    public Dish() {
     }
 
-    public Dish(Integer id, String name, int price, Menu menu) {
+    public Dish(Dish d) {
+        this(d.getId(), d.getName(), d.getPrice());
+    }
+
+    public Dish(Integer id, String name, int price) {
         super(id, name);
         this.price = price;
-        this.menu = menu;
     }
 
     public int getPrice() {

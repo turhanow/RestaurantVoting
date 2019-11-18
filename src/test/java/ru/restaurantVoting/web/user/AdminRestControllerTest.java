@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.restaurantVoting.TestUtil.readFromJson;
-import static ru.restaurantVoting.UserTestData.*;
+import static ru.restaurantVoting.data.UserTestData.*;
 
 
 class AdminRestControllerTest extends AbstractControllerTest {
