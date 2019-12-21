@@ -1,5 +1,7 @@
 package ru.restaurantVoting.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +13,7 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)
+    @SafeHtml
     protected String name;
 
     public AbstractNamedEntity() {

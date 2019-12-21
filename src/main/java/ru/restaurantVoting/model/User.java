@@ -2,6 +2,7 @@ package ru.restaurantVoting.model;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
@@ -20,11 +21,13 @@ public class User extends AbstractNamedEntity {
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
+    @SafeHtml
     private String email;
 
     @Column(name = "password", nullable = false)
     @NotEmpty
     @Length(min = 5)
+    @SafeHtml
     private String password;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
