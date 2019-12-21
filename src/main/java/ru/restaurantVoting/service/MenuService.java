@@ -36,6 +36,10 @@ public class MenuService {
         return checkNotFoundWithId(repository.get(id, restaurant_id), id);
     }
 
+    public Menu findById(int id) {
+        return checkNotFoundWithId(repository.findById(id), id);
+    }
+
     public List<Menu> findByDate(LocalDate date) {
         Assert.notNull(date, "date must not be null");
         List<Menu> menuList = repository.findByDate(date);

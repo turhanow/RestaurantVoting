@@ -31,10 +31,6 @@ public class VoteService {
         checkNotFoundWithId(repository.save(vote, userId, menuId), vote.getId());
     }
 
-    public void delete(int id, int userId, int menuId) {
-        checkNotFoundWithId(repository.delete(id, userId, menuId), id);
-    }
-
     public Vote get(int id, int userId, int menuId) {
         return checkNotFoundWithId(repository.get(id, userId, menuId), id);
     }

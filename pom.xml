@@ -8,7 +8,7 @@
 
     <version>1.0-SNAPSHOT</version>
 
-    <name>Restaurant Voting System</name>
+    <restaurantId>Restaurant Voting System</restaurantId>
 
     <properties>
         <java.version>11</java.version>

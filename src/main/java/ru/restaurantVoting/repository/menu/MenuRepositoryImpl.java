@@ -32,6 +32,10 @@ public class MenuRepositoryImpl {
         return menuRepository.get(id, restaurant_id);
     }
 
+    public Menu findById(int id) {
+        return menuRepository.findById(id).orElse(null);
+    }
+
     public List<Menu> findByDate(LocalDate date) {
         return menuRepository.findByDate(date);
     }

@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantVoting.model.Restaurant;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * Spring Data JPA repository for the Restaurant entity.
@@ -16,7 +16,7 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
 
     @Query("SELECT r FROM Restaurant r WHERE r.name LIKE CONCAT('%',:name,'%')")
-    List<Restaurant> findByName(@Param("name") String name);
+    Optional<Restaurant> findByName(@Param("name") String name);
 
     @Modifying
     @Transactional

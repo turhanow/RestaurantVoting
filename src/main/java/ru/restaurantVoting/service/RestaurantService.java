@@ -9,6 +9,7 @@ import ru.restaurantVoting.repository.RestaurantRepository;
 
 import java.util.List;
 
+import static ru.restaurantVoting.util.ValidationUtil.checkNotFound;
 import static ru.restaurantVoting.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -41,5 +42,10 @@ public class RestaurantService {
 
     public List<Restaurant> getAll() {
         return repository.findAll(SORT_NAME);
+    }
+
+    public Restaurant findByName(String name) {
+        Assert.notNull(name, "name must not be null");
+        return checkNotFound(repository.findByName(name).orElse(null), name);
     }
 }
