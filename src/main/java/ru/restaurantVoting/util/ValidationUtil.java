@@ -1,8 +1,14 @@
 package ru.restaurantVoting.util;
 
 
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import ru.restaurantVoting.model.AbstractBaseEntity;
 import ru.restaurantVoting.util.exception.NotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ValidationUtil {
 
@@ -33,6 +39,7 @@ public class ValidationUtil {
             throw new IllegalArgumentException(entity + " must be new (id=null)");
         }
     }
+
     public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
 //      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
         if (entity.isNew()) {
@@ -41,6 +48,7 @@ public class ValidationUtil {
             throw new IllegalArgumentException(entity + " must be with id=" + id);
         }
     }
+
     public static Throwable getRootCause(Throwable t) {
         Throwable result = t;
         Throwable cause;
@@ -49,5 +57,15 @@ public class ValidationUtil {
             result = cause;
         }
         return result;
+    }
+
+    public static String[] getCauseMessage(Throwable throwable) {
+        List<String> fieldErrors = new ArrayList<>();
+        if (throwable instanceof BindException) {
+            BindException exception = (BindException) throwable;
+            List<ObjectError> errors = exception.getBindingResult().getAllErrors();
+            errors.forEach(e -> fieldErrors.add(((FieldError) e).getField() + ": " + e.getDefaultMessage()));
+        }
+        return fieldErrors.toArray(String[]::new);
     }
 }
