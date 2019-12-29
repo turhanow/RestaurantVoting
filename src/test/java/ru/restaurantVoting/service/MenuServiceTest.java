@@ -2,6 +2,8 @@ package ru.restaurantVoting.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantVoting.model.Menu;
 import ru.restaurantVoting.util.exception.NotFoundException;
 
@@ -91,6 +93,7 @@ class MenuServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     void createWithException() throws Exception {
         validateRootCause(() -> service.create(new Menu(null, null), RESTAURANT_ID_2), ConstraintViolationException.class);
     }

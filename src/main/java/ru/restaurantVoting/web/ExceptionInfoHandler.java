@@ -22,6 +22,7 @@ import ru.restaurantVoting.util.exception.IllegalRequestDataException;
 import ru.restaurantVoting.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 import static ru.restaurantVoting.util.ValidationUtil.getCauseMessage;
 import static ru.restaurantVoting.util.exception.ErrorType.*;
@@ -46,7 +47,13 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
-    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class, BindException.class})
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ErrorInfo constraintError(HttpServletRequest req, ConstraintViolationException e) {
+        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
@@ -58,8 +65,8 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorInfo handleError(HttpServletRequest req, MethodArgumentNotValidException e) {
+    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
+    public ErrorInfo bindValidationError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR);
     }
 

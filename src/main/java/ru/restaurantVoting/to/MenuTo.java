@@ -1,32 +1,41 @@
 package ru.restaurantVoting.to;
 
-import ru.restaurantVoting.model.AbstractBaseEntity;
 import ru.restaurantVoting.model.Dish;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 
-public class MenuTo extends AbstractBaseEntity {
-
-    @NotNull
-    private final LocalDate date;
+public class MenuTo extends BaseTo {
 
     @NotNull
-    private final List<Dish> menu;
+    private LocalDate date;
+
+    @NotNull
+    private Dish[] menu;
+
+    public MenuTo() {
+    }
 
     public MenuTo(Integer id, LocalDate date, Dish... dishes) {
         super(id);
         this.date = date;
-        this.menu = List.of(dishes);
+        this.menu = dishes;
     }
 
     public LocalDate getDate() {
         return date;
     }
 
-    public List<Dish> getMenu() {
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Dish[] getMenu() {
         return menu;
+    }
+
+    public void setMenu(Dish... menu) {
+        this.menu = menu;
     }
 
     @Override

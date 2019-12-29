@@ -1,13 +1,17 @@
 package ru.restaurantVoting;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantVoting.service.*;
 
 @SpringJUnitWebConfig(locations = {
-        "classpath:spring/spring-app.xml"
+        "classpath:spring/spring-app.xml",
+        "classpath:spring/spring-mvc.xml"
 })
+@Transactional
+@ExtendWith(TimingExtension.class)
 public abstract class AbstractTest {
     @Autowired
     protected UserService userService;

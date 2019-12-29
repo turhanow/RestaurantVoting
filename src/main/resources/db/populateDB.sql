@@ -11,8 +11,8 @@ FROM USERS;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO USERS (NAME, PASSWORD, EMAIL, REGISTERED)
-VALUES ('User', 'user_password', 'user@email.com', '2019-04-23 10:00:00'),
-       ('Admin', 'admin_password', 'admin@email.com', '2019-04-23 12:00:00');
+VALUES ('User', '{noop}user_password', 'user@email.com', '2019-04-23 10:00:00'),
+       ('Admin', '{noop}admin_password', 'admin@email.com', '2019-04-23 12:00:00');
 
 INSERT INTO user_roles (user_id, role)
 VALUES (100000, 'ROLE_USER'),
@@ -20,9 +20,9 @@ VALUES (100000, 'ROLE_USER'),
        (100001, 'ROLE_ADMIN');
 
 INSERT INTO RESTAURANT (NAME)
-VALUES ('KFC'),
-       ('McDonalds'),
-       ('BurgerKing');
+VALUES ('BurgerKing'),
+       ('KFC'),
+       ('McDonalds');
 
 INSERT INTO MENU (MENU_DATE, RESTAURANT_ID)
 VALUES ('2019-04-19', 100002),

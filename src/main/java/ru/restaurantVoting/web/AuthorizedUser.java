@@ -1,31 +1,33 @@
 package ru.restaurantVoting.web;
 
 import ru.restaurantVoting.model.User;
+import ru.restaurantVoting.to.UserTo;
+import ru.restaurantVoting.util.UserUtil;
 
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     private static final long serialVersionUID = 1L;
 
-    private User user;
+    private UserTo userTo;
 
     public AuthorizedUser(User user) {
         super(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, user.getRoles());
-        this.user = user;
+        this.userTo = UserUtil.asTo(user);
     }
 
     public int getId() {
-        return user.getId();
+        return userTo.id();
     }
 
-    public void update(User newUser) {
-        user = newUser;
+    public void update(UserTo newTo) {
+        userTo = newTo;
     }
 
-    public User getUser() {
-        return user;
+    public UserTo getUserTo() {
+        return userTo;
     }
 
     @Override
     public String toString() {
-        return user.toString();
+        return userTo.toString();
     }
 }

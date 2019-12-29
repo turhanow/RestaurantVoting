@@ -3,6 +3,8 @@ package ru.restaurantVoting.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: turhanow
@@ -15,7 +17,11 @@ public class Menu extends AbstractBaseEntity {
     @Column(name = "menu_date", nullable = false)
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("name ASC")
+    private List<Dish> dishes = Collections.emptyList();
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotNull
     private Restaurant restaurant;
@@ -32,6 +38,13 @@ public class Menu extends AbstractBaseEntity {
         this.date = date;
     }
 
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<Dish> dishes) {
+        this.dishes.addAll(dishes);
+    }
 
     public LocalDate getDate() {
         return date;

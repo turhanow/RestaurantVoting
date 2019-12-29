@@ -43,9 +43,4 @@ public abstract class AbstractUserController {
         assureIdConsistent(user, id);
         service.update(user);
     }
-
-    public void setEnable(int id, boolean value) {
-        log.info("setEnable {} for id={}", value, id);
-        service.enable(id, value);
-    }
 }
