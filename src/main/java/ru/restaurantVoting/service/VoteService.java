@@ -43,4 +43,9 @@ public class VoteService {
     public List<Vote> getAll() {
         return repository.getAll();
     }
+
+    public List<Vote> getAllByDate(LocalDate date) {
+        Assert.notNull(date, "date must not be null");
+        return repository.getAllByDate(date);
+    }
 }

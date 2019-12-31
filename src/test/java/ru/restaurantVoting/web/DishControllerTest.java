@@ -105,7 +105,7 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     void findByDate() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "by?date=" + LocalDate.of(2019, 6, 11))
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "by?date=" + LocalDate.now())
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())

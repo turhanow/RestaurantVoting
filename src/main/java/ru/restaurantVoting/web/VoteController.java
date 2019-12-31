@@ -23,7 +23,7 @@ import java.util.Objects;
 public class VoteController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final LocalTime EXPIRED_TIME = LocalTime.parse("11:00");
+    public static final LocalTime EXPIRED_TIME = LocalTime.parse("11:00");
 
     public static final String REST_URL = "/rest/votes";
 
@@ -39,6 +39,12 @@ public class VoteController {
         return voteService.getAll();
     }
 
+    @GetMapping("/byDate")
+    public List<Vote> findAllByDate(@RequestParam LocalDate date) {
+        log.info("getAllByDate {}", date);
+        return voteService.getAllByDate(date);
+    }
+
     @PostMapping("/{menuId}")
     public ResponseEntity<Restaurant> vote(@PathVariable("menuId") int menuId) {
         int userId = SecurityUtil.authUserId();
@@ -46,12 +52,13 @@ public class VoteController {
         LocalDate today = LocalDate.now();
         boolean expired = LocalTime.now().isAfter(EXPIRED_TIME);
         Menu menu = menuService.findById(menuId);
-        if (expired) {
-            return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.CONFLICT);
-        }
 
         if (!menu.getDate().equals(today)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (expired) {
+            return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.CONFLICT);
         }
 
         Vote vote = voteService.getForUserAndDate(userId, today);

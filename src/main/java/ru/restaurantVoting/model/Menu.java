@@ -21,7 +21,7 @@ public class Menu extends AbstractBaseEntity {
     @OrderBy("name ASC")
     private List<Dish> dishes = Collections.emptyList();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotNull
     private Restaurant restaurant;

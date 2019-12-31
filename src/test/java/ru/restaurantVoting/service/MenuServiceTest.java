@@ -23,17 +23,17 @@ class MenuServiceTest extends AbstractServiceTest {
 
     @Test
     void create() throws Exception {
-        Menu newMenu = new Menu(null, LocalDate.now());
+        Menu newMenu = new Menu(null, LocalDate.of(3000,1,1));
         Menu created = service.create(new Menu(newMenu), RESTAURANT_ID_1);
         newMenu.setId(created.getId());
         assertMatch(created, newMenu);
-        assertMatch(service.getAll(), MENU_1, MENU_2, MENU_3, MENU_4, MENU_5, newMenu);
+        assertMatch(service.getAll(), MENU_1, MENU_2,  MENU_5,MENU_3, MENU_4, newMenu);
     }
 
     @Test
     void delete() throws Exception {
         service.delete(MENU_ID_1, RESTAURANT_ID_1);
-        assertMatch(service.getAll(), MENU_2, MENU_3, MENU_4, MENU_5);
+        assertMatch(service.getAll(), MENU_2, MENU_5,MENU_3, MENU_4);
     }
 
     @Test
@@ -56,7 +56,7 @@ class MenuServiceTest extends AbstractServiceTest {
 
     @Test
     void findByDate() throws Exception {
-        List<Menu> menuList = service.findByDate(LocalDate.of(2019, 6, 11));
+        List<Menu> menuList = service.findByDate(LocalDate.now());
         assertMatch(menuList, MENU_3, MENU_4);
     }
 
@@ -89,7 +89,7 @@ class MenuServiceTest extends AbstractServiceTest {
     @Test
     void getAll() throws Exception {
         List<Menu> all = service.getAll();
-        assertMatch(all, MENU_1, MENU_2, MENU_3, MENU_4, MENU_5);
+        assertMatch(all, MENU_1, MENU_2, MENU_5, MENU_3, MENU_4);
     }
 
     @Test

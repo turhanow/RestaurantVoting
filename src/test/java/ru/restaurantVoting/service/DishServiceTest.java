@@ -65,7 +65,8 @@ class DishServiceTest extends AbstractServiceTest {
 
     @Test
     void findByDate() throws Exception {
-        List<Dish> dishList = service.findByDate(LocalDate.of(2019, 6, 11));
+
+        List<Dish> dishList = service.findByDate(LocalDate.now());
         assertMatch(dishList, DISH_3, DISH_4, DISH_5, DISH_6);
     }
 

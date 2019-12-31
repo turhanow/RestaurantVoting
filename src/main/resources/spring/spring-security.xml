@@ -7,6 +7,7 @@
     <http pattern="/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
         <http-basic/>
         <intercept-url pattern="/rest/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="//rest/menus/byDate" access="isAnonymous()"/>
         <intercept-url pattern="/rest/dishes/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/rest/restaurants/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/rest/profile/**" access="isAuthenticated()"/>

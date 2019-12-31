@@ -20,8 +20,8 @@ public class MenuTestData {
 
     public static final Menu MENU_1 = new Menu(MENU_ID_1, LocalDate.of(2019, 4, 19));
     public static final Menu MENU_2 = new Menu(MENU_ID_2, LocalDate.of(2019, 4, 20));
-    public static final Menu MENU_3 = new Menu(MENU_ID_3, LocalDate.of(2019, 6, 11));
-    public static final Menu MENU_4 = new Menu(MENU_ID_4, LocalDate.of(2019, 6, 11));
+    public static final Menu MENU_3 = new Menu(MENU_ID_3, LocalDate.now());
+    public static final Menu MENU_4 = new Menu(MENU_ID_4, LocalDate.now());
     public static final Menu MENU_5 = new Menu(MENU_ID_5, LocalDate.of(2019, 6, 12));
 
     public static void assertMatch(Menu actual, Menu expected) {

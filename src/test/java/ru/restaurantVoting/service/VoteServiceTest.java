@@ -24,7 +24,7 @@ class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     void create() throws Exception {
-        Vote newVote = new Vote(null, LocalDate.now());
+        Vote newVote = new Vote(null, LocalDate.of(3000, 1, 1));
         Vote created = service.create(new Vote(newVote), USER_ID, MENU_ID_1);
         newVote.setId(created.getId());
         assertMatch(created, newVote);
@@ -61,6 +61,12 @@ class VoteServiceTest extends AbstractServiceTest {
     void getAll() throws Exception {
         List<Vote> all = service.getAll();
         assertMatch(all, VOTE_1, VOTE_2, VOTE_3);
+    }
+
+    @Test
+    void getAllByDate() throws Exception {
+        List<Vote> all = service.getAllByDate(LocalDate.now());
+        assertMatch(all, VOTE_3);
     }
 
     @Test

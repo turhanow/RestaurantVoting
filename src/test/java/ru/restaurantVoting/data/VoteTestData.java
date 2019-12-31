@@ -18,7 +18,7 @@ public class VoteTestData {
 
     public static final Vote VOTE_1 = new Vote(VOTE_ID_1, LocalDate.of(2019, 4, 20));
     public static final Vote VOTE_2 = new Vote(VOTE_ID_2, LocalDate.of(2019, 4, 20));
-    public static final Vote VOTE_3 = new Vote(VOTE_ID_3, LocalDate.of(2019, 6, 11));
+    public static final Vote VOTE_3 = new Vote(VOTE_ID_3, LocalDate.now());
 
     public static void assertMatch(Vote actual, Vote expected) {
         assertThat(actual).isEqualTo(expected);
@@ -34,6 +34,10 @@ public class VoteTestData {
 
     public static ResultMatcher contentJson(Vote... expected) {
         return result -> assertMatch(readListFromJsonMvcResult(result, Vote.class), List.of(expected));
+    }
+
+    public static ResultMatcher contentJson(List<Vote> expected) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, Vote.class), expected);
     }
 
     public static ResultMatcher contentJson(Vote expected) {

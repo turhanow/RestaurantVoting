@@ -27,8 +27,8 @@ VALUES ('BurgerKing'),
 INSERT INTO MENU (MENU_DATE, RESTAURANT_ID)
 VALUES ('2019-04-19', 100002),
        ('2019-04-20', 100003),
-       ('2019-06-11', 100003),
-       ('2019-06-11', 100004),
+       (current_date, 100003),
+       (current_date, 100004),
        ('2019-06-12', 100002);
 
 INSERT INTO DISH (NAME, PRICE, MENU_ID)
@@ -42,4 +42,4 @@ VALUES ('Steak', 100000, 100005),
 INSERT INTO VOTE (VOTE_DATE, USER_ID, MENU_ID)
 VALUES ('2019-04-20', 100000, 100006),
        ('2019-04-20', 100001, 100006),
-       ('2019-06-11', 100000, 100007);
+       (current_date, 100000, 100007);

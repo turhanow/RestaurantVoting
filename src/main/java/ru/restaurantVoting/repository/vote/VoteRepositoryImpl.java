@@ -41,6 +41,10 @@ public class VoteRepositoryImpl {
         return voteRepository.getForUserAndDate(userId, date).orElse(null);
     }
 
+    public List<Vote> getAllByDate(LocalDate date) {
+        return voteRepository.getAllByDate(date);
+    }
+
     public List<Vote> getAll() {
         return voteRepository.findAll(SORT_DATE);
     }

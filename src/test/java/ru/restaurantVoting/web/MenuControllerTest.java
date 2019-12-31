@@ -38,7 +38,7 @@ class MenuControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MENU_1, MENU_2, MENU_3, MENU_4, MENU_5));
+                .andExpect(contentJson(MENU_1, MENU_2, MENU_5, MENU_3, MENU_4));
     }
 
     @Test
@@ -61,7 +61,7 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        MenuTo expected = new MenuTo(null, LocalDate.now(), DISH_1, DISH_3);
+        MenuTo expected = new MenuTo(null, LocalDate.of(3000, 1, 1), DISH_1, DISH_3);
         ResultActions action = mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + RESTAURANT_ID_2)
                 .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +72,7 @@ class MenuControllerTest extends AbstractControllerTest {
         expected.setId(returned.getId());
 
         assertMatch(returned, menuFromTo(expected));
-        assertMatch(menuService.getAll(), MENU_1, MENU_2, MENU_3, MENU_4, MENU_5, menuFromTo(expected));
+        assertMatch(menuService.getAll(), MENU_1, MENU_2, MENU_5, MENU_3, MENU_4, menuFromTo(expected));
     }
 
     @Test
@@ -81,7 +81,7 @@ class MenuControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(menuService.getAll(), MENU_2, MENU_3, MENU_4, MENU_5);
+        assertMatch(menuService.getAll(), MENU_2, MENU_5, MENU_3, MENU_4);
     }
 
     @Test
@@ -106,8 +106,7 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void findByDate() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "byDate?date=" + LocalDate.of(2019, 6, 11))
-                .with(userHttpBasic(ADMIN)))
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "byDate?date=" + LocalDate.now()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
@@ -155,7 +154,7 @@ class MenuControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void updateDuplicate() throws Exception {
-        MenuTo invalid = new MenuTo(MENU_ID_2, LocalDate.of(2019, 6, 11));
+        MenuTo invalid = new MenuTo(MENU_ID_2, LocalDate.now());
         mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT_ID_2 + '/' + MENU_ID_2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
@@ -168,7 +167,7 @@ class MenuControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicate() throws Exception {
-        MenuTo invalid = new MenuTo(null, LocalDate.of(2019, 6, 11));
+        MenuTo invalid = new MenuTo(null, LocalDate.now());
         mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + RESTAURANT_ID_3)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
