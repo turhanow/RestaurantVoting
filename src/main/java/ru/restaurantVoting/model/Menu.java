@@ -1,5 +1,9 @@
 package ru.restaurantVoting.model;
 
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -9,6 +13,7 @@ import java.util.List;
 /**
  * User: turhanow
  */
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"menu_date", "restaurant_id"}, name = "unique_menu")})
 public class Menu extends AbstractBaseEntity {
@@ -17,10 +22,12 @@ public class Menu extends AbstractBaseEntity {
     @Column(name = "menu_date", nullable = false)
     private LocalDate date;
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("name ASC")
     private List<Dish> dishes = Collections.emptyList();
 
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotNull

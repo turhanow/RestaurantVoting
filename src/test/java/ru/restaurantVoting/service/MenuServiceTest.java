@@ -1,10 +1,13 @@
 package ru.restaurantVoting.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurantVoting.model.Menu;
+import ru.restaurantVoting.repository.JpaUtil;
 import ru.restaurantVoting.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -21,19 +24,31 @@ class MenuServiceTest extends AbstractServiceTest {
     @Autowired
     private MenuService service;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
+    private JpaUtil jpaUtil;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        cacheManager.getCache("menusByDate").clear();
+        jpaUtil.clear2ndLevelHibernateCache();
+    }
+
     @Test
     void create() throws Exception {
-        Menu newMenu = new Menu(null, LocalDate.of(3000,1,1));
+        Menu newMenu = new Menu(null, LocalDate.of(3000, 1, 1));
         Menu created = service.create(new Menu(newMenu), RESTAURANT_ID_1);
         newMenu.setId(created.getId());
         assertMatch(created, newMenu);
-        assertMatch(service.getAll(), MENU_1, MENU_2,  MENU_5,MENU_3, MENU_4, newMenu);
+        assertMatch(service.getAll(), MENU_1, MENU_2, MENU_5, MENU_3, MENU_4, newMenu);
     }
 
     @Test
     void delete() throws Exception {
         service.delete(MENU_ID_1, RESTAURANT_ID_1);
-        assertMatch(service.getAll(), MENU_2, MENU_5,MENU_3, MENU_4);
+        assertMatch(service.getAll(), MENU_2, MENU_5, MENU_3, MENU_4);
     }
 
     @Test
