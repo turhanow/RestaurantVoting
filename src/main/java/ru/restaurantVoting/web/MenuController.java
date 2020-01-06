@@ -27,6 +27,7 @@ public class MenuController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public static final String REST_URL = "/rest/menus";
+    public static final String RESTAURANT_URL = "/restaurants/";
 
     @Autowired
     private MenuService menuService;
@@ -37,13 +38,13 @@ public class MenuController {
         return menuService.getAll();
     }
 
-    @GetMapping("/{restaurant_id}/{id}")
+    @GetMapping("/{id}" + RESTAURANT_URL + "{restaurant_id}")
     public Menu get(@PathVariable int id, @PathVariable int restaurant_id) {
         log.info("get {} for id={}", id, restaurant_id);
         return menuService.get(id, restaurant_id);
     }
 
-    @PostMapping(value = "/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/restaurants/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurant_id) {
         log.info("create {} for id={}", menuTo, restaurant_id);
         checkNew(menuTo);
@@ -54,14 +55,14 @@ public class MenuController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @DeleteMapping("/{restaurant_id}/{id}")
+    @DeleteMapping("/{id}" + RESTAURANT_URL + "{restaurant_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id, @PathVariable int restaurant_id) {
         log.info("delete {} for id={}", id, restaurant_id);
         menuService.delete(id, restaurant_id);
     }
 
-    @PutMapping(value = "/{restaurant_id}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}" + RESTAURANT_URL + "{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody MenuTo menuTo, @PathVariable int id, @PathVariable int restaurant_id) {
         log.info("update {} with id={} for id={}", menuTo, id, restaurant_id);
@@ -76,9 +77,15 @@ public class MenuController {
     }
 
     @GetMapping("/byRestaurant")
-    public List<Menu> findByRestaurant(@RequestParam int restaurant_id) {
-        log.info("findByRestaurant {}", restaurant_id);
-        return menuService.findByRestaurant(restaurant_id);
+    public List<Menu> findByRestaurant(@RequestParam String name) {
+        log.info("findByRestaurant {}", name);
+        return menuService.findByRestaurant(name);
+    }
+
+    @GetMapping("/byRestaurantAndDate")
+    public Menu findByRestaurantAndDate(@RequestParam String name, @RequestParam LocalDate date) {
+        log.info("findByRestaurantAndDate for name={} and date={}", name, date);
+        return menuService.findByRestaurantAndDate(name, date);
     }
 
     @GetMapping("/byId")

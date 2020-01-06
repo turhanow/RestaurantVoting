@@ -4,18 +4,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public class DateTimeUtil {
+public class DateUtil {
 
-    private DateTimeUtil() {
+    private DateUtil() {
     }
 
     public static LocalDate parseLocalDate(@Nullable String str) {
         return StringUtils.isEmpty(str) ? null : LocalDate.parse(str);
-    }
-
-    public static LocalTime parseLocalTime(@Nullable String str) {
-        return StringUtils.isEmpty(str) ? null : LocalTime.parse(str);
     }
 }

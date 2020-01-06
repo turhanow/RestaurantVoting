@@ -20,8 +20,7 @@
     <logger name="result" level="INFO" additivity="false">
         <appender-ref ref="result"/>
     </logger>
-    <!--<logger name="org.springframework.web.servlet" level="debug"/>-->
-    <logger name="org.springframework.security" level="debug"/>
+
     <logger name="ru.restaurantVoting" level="debug"/>
 
     <root level="INFO">

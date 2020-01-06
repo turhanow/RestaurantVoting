@@ -26,7 +26,7 @@ public class DishTestData {
     public static final Dish DISH_6 = new Dish(DISH_ID_6, "Takoburger", 33300);
 
     public static void assertMatch(Dish actual, Dish expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "menu");
     }
 
     public static void assertMatch(Iterable<Dish> actual, Dish... expected) {
@@ -34,7 +34,7 @@ public class DishTestData {
     }
 
     public static void assertMatch(Iterable<Dish> actual, Iterable<Dish> expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("menu").isEqualTo(expected);
     }
 
     public static ResultMatcher contentJson(Dish... expected) {

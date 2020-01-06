@@ -12,20 +12,22 @@ import ru.restaurantVoting.model.Restaurant;
 import ru.restaurantVoting.model.Vote;
 import ru.restaurantVoting.service.MenuService;
 import ru.restaurantVoting.service.VoteService;
+import ru.restaurantVoting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+
+import static ru.restaurantVoting.util.ValidationUtil.checkExpiredDate;
+import static ru.restaurantVoting.util.ValidationUtil.checkExpiredDateWithTime;
 
 @RestController
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public static final LocalTime EXPIRED_TIME = LocalTime.parse("11:00");
-
     public static final String REST_URL = "/rest/votes";
+    public static final String MENUS_URL = "/menus/";
 
     @Autowired
     private VoteService voteService;
@@ -33,43 +35,47 @@ public class VoteController {
     @Autowired
     private MenuService menuService;
 
-    @GetMapping
-    public List<Vote> getAll() {
-        log.info("getAll");
-        return voteService.getAll();
-    }
-
     @GetMapping("/byDate")
     public List<Vote> findAllByDate(@RequestParam LocalDate date) {
         log.info("getAllByDate {}", date);
         return voteService.getAllByDate(date);
     }
 
-    @PostMapping("/{menuId}")
+    @PostMapping(MENUS_URL + "{menuId}")
     public ResponseEntity<Restaurant> vote(@PathVariable("menuId") int menuId) {
         int userId = SecurityUtil.authUserId();
         log.info("User with id = {} votes for menu with id = {}", userId, menuId);
         LocalDate today = LocalDate.now();
-        boolean expired = LocalTime.now().isAfter(EXPIRED_TIME);
         Menu menu = menuService.findById(menuId);
-
-        if (!menu.getDate().equals(today)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        if (expired) {
-            return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.CONFLICT);
-        }
+        checkExpiredDate(menu.getDate(), menuId);
 
         Vote vote = voteService.getForUserAndDate(userId, today);
-        if (Objects.nonNull(vote)) {
-            vote.setMenu(menu);
-            voteService.update(vote, userId, menuId);
-            return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.OK);
-        } else {
+
+        if (Objects.isNull(vote)) {
             vote = new Vote(null, today);
             voteService.create(vote, userId, menuId);
-            return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.CREATED);
+        } else {
+            throw new NotFoundException("Vote for menu id=" + menuId + " already exist!");
         }
+
+        return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.CREATED);
+    }
+
+    @PutMapping(MENUS_URL + "{menuId}")
+    public ResponseEntity<Restaurant> reVote(@PathVariable("menuId") int menuId) {
+        int userId = SecurityUtil.authUserId();
+        log.info("User with id = {} updates vote for menu with id = {}", userId, menuId);
+        LocalDate today = LocalDate.now();
+        Menu menu = menuService.findById(menuId);
+
+        checkExpiredDateWithTime(menu.getDate(), menuId);
+
+        Vote vote = voteService.getForUserAndDate(userId, today);
+        if (Objects.isNull(vote)) {
+            throw new NotFoundException("Vote for menu id=" + menuId + " is not found!");
+        } else {
+            voteService.update(vote, userId, menuId);
+        }
+        return new ResponseEntity<>(menu.getRestaurant(), HttpStatus.OK);
     }
 }

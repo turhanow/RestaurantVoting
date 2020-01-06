@@ -21,7 +21,7 @@ public class VoteTestData {
     public static final Vote VOTE_3 = new Vote(VOTE_ID_3, LocalDate.now());
 
     public static void assertMatch(Vote actual, Vote expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "user", "menu");
     }
 
     public static void assertMatch(Iterable<Vote> actual, Vote... expected) {
@@ -29,7 +29,8 @@ public class VoteTestData {
     }
 
     public static void assertMatch(Iterable<Vote> actual, Iterable<Vote> expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("user", "menu").isEqualTo(expected);
+        ;
     }
 
     public static ResultMatcher contentJson(Vote... expected) {

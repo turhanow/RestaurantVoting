@@ -22,8 +22,7 @@ public class Menu extends AbstractBaseEntity {
     @Column(name = "menu_date", nullable = false)
     private LocalDate date;
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("name ASC")
     private List<Dish> dishes = Collections.emptyList();
 
@@ -41,8 +40,13 @@ public class Menu extends AbstractBaseEntity {
     }
 
     public Menu(Integer id, LocalDate date) {
+        this(id, date, null);
+    }
+
+    public Menu(Integer id, LocalDate date, Restaurant restaurant) {
         super(id);
         this.date = date;
+        this.restaurant = restaurant;
     }
 
     public List<Dish> getDishes() {

@@ -5,31 +5,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collections;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.restaurantVoting.TestUtil.userHttpBasic;
-import static ru.restaurantVoting.data.MenuTestData.MENU_ID_2;
-import static ru.restaurantVoting.data.MenuTestData.MENU_ID_4;
+import static ru.restaurantVoting.data.MenuTestData.*;
 import static ru.restaurantVoting.data.UserTestData.ADMIN;
 import static ru.restaurantVoting.data.UserTestData.USER;
-import static ru.restaurantVoting.data.VoteTestData.*;
+import static ru.restaurantVoting.data.VoteTestData.VOTE_3;
+import static ru.restaurantVoting.data.VoteTestData.contentJson;
+import static ru.restaurantVoting.web.VoteController.MENUS_URL;
 
 class VoteControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = VoteController.REST_URL + '/';
-
-    @Test
-    void getAll() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
-                .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(VOTE_1, VOTE_2, VOTE_3));
-    }
 
     @Test
     void voteNotFound() throws Exception {
@@ -41,10 +32,10 @@ class VoteControllerTest extends AbstractControllerTest {
 
     @Test
     void vote() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENU_ID_4)
-                .with(userHttpBasic(ADMIN)))
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENUS_URL + MENU_ID_3)
+                .with(userHttpBasic(USER)))
                 .andDo(print())
-                .andExpect(LocalTime.now().isAfter(VoteController.EXPIRED_TIME) ? status().isConflict() : status().isOk());
+                .andExpect(!MENU_3.getDate().isEqual(LocalDate.now()) ? status().isConflict() : status().isCreated());
     }
 
     @Test

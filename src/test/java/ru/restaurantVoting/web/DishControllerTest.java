@@ -24,6 +24,7 @@ import static ru.restaurantVoting.data.MenuTestData.*;
 import static ru.restaurantVoting.data.UserTestData.ADMIN;
 import static ru.restaurantVoting.util.exception.ErrorType.DATA_ERROR;
 import static ru.restaurantVoting.util.exception.ErrorType.VALIDATION_ERROR;
+import static ru.restaurantVoting.web.DishController.MENUS_URL;
 
 class DishControllerTest extends AbstractControllerTest {
 
@@ -40,7 +41,7 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     void get() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + MENU_ID_1 + '/' + DISH_ID_1)
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + DISH_ID_1 + MENUS_URL + MENU_ID_1)
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -51,7 +52,7 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     void getNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + MENU_ID_1 + '/' + DISH_ID_3)
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + DISH_ID_3 + MENUS_URL + MENU_ID_1)
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -59,7 +60,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     void createWithLocation() throws Exception {
         Dish expected = new Dish(null, "New dish", 10000);
-        ResultActions action = mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENU_ID_1)
+        ResultActions action = mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENUS_URL + MENU_ID_1)
                 .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
@@ -74,7 +75,7 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     void delete() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(REST_URL + MENU_ID_4 + '/' + DISH_ID_6)
+        mockMvc.perform(MockMvcRequestBuilders.delete(REST_URL + DISH_ID_6 + MENUS_URL + MENU_ID_4)
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -83,7 +84,7 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(REST_URL + MENU_ID_1 + '/' + DISH_ID_3)
+        mockMvc.perform(MockMvcRequestBuilders.delete(REST_URL + DISH_ID_3 + MENUS_URL + MENU_ID_1)
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
@@ -94,7 +95,7 @@ class DishControllerTest extends AbstractControllerTest {
         Dish updated = new Dish(DISH_1);
         updated.setName("UpdatedName");
         updated.setPrice(100);
-        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + MENU_ID_1 + '/' + DISH_ID_1)
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + DISH_ID_1 + MENUS_URL + MENU_ID_1)
                 .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
@@ -116,7 +117,7 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     void findByMenu() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + MENU_ID_3)
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + MENUS_URL + MENU_ID_3)
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -128,7 +129,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     void createInvalid() throws Exception {
         Dish invalid = new Dish(null, "", 200);
-        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENU_ID_1)
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENUS_URL + MENU_ID_1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN)))
@@ -142,7 +143,7 @@ class DishControllerTest extends AbstractControllerTest {
     void updateInvalid() throws Exception {
         Dish invalid = new Dish(DISH_1);
         invalid.setName("");
-        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + MENU_ID_1 + '/' + DISH_ID_1)
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + DISH_ID_1 + MENUS_URL + MENU_ID_1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN)))
@@ -156,7 +157,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     void updateDuplicate() throws Exception {
         DishTo invalid = new DishTo(DISH_ID_3, "McSteak", 6000);
-        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + MENU_ID_3 + '/' + DISH_ID_3)
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + DISH_ID_3 + MENUS_URL + MENU_ID_3)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN)))
@@ -169,7 +170,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicate() throws Exception {
         DishTo invalid = new DishTo(null, "McSteak", 6000);
-        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENU_ID_3)
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + MENUS_URL + MENU_ID_3)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN)))
@@ -181,7 +182,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     void updateHtmlUnsafe() throws Exception {
         Dish invalid = new Dish(DISH_ID_1, "<script>alert(123)</script>", 200);
-        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + MENU_ID_1 + '/' + DISH_ID_1)
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + DISH_ID_1 + MENUS_URL + MENU_ID_1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN)))

@@ -5,14 +5,33 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import ru.restaurantVoting.HasId;
+import ru.restaurantVoting.util.exception.ExpiredDateTimeException;
 import ru.restaurantVoting.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationUtil {
+    public static final LocalTime EXPIRED_TIME = LocalTime.of(11, 0);
 
     private ValidationUtil() {
+    }
+
+    public static void checkExpiredDateWithTime(LocalDate date, int menuId) {
+        boolean expired = LocalTime.now().isAfter(EXPIRED_TIME);
+        checkExpiredDate(date, menuId);
+        if (expired) {
+            throw new ExpiredDateTimeException("Expired time voting for menu with id=" + menuId);
+        }
+    }
+
+    public static void checkExpiredDate(LocalDate date, int menuId) {
+        LocalDate today = LocalDate.now();
+        if (!date.equals(today)) {
+            throw new ExpiredDateTimeException("Expired date voting for menu with id=" + menuId);
+        }
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {

@@ -134,13 +134,13 @@ Create | POST | `{URL}/rest/restaurants` | Create Body | Only Admin
 
 Description | Method | URL | Body | User
 ----------- | ------ | --- | ---- | ----
-Get | GET | `{URL}/rest/dishes/{ID}` | none | Only Admin
+Get | GET | `{URL}/rest/dishes/{ID}/menus/{menuID}` | none | Only Admin
 Get All |GET |`{URL}/rest/dishes` | none |Only Admin
-Delete  | DELETE | `{URL}/rest/dishes/(ID}` | none | Only Admin
-Update | PUT | `{URL}/rest/dishes/{ID}` | Update Body |Only Admin
-Create | POST | `{URL}/rest/dishes` | Create Body | Only Admin
-Find by date | GET | `{URL}/rest/dishes/by` | none | Only Admin
-Find by menu | GET | `{URL}/rest/dishes/{menuID}` | none | Only Admin
+Delete  | DELETE | `{URL}/rest/dishes/{ID}/menus/{menuID}` | none | Only Admin
+Update | PUT | `{URL}/rest/dishes/{ID}/menus/{menuID}` | Update Body |Only Admin
+Create | POST | `{URL}/rest/dishes/menus/{menuID}` | Create Body | Only Admin
+Find by date | GET | `{URL}/rest/dishes/by?date=[yyyy-MM-dd]` | none | Only Admin
+Find by dishes | GET | `{URL}/rest/dishes/menus/{menuID}` | none | Only Admin
 
 ## Bodies
 #### Update Body
@@ -165,26 +165,34 @@ Find by menu | GET | `{URL}/rest/dishes/{menuID}` | none | Only Admin
 
 Description | Method | URL | Body | User
 ----------- | ------ | --- | ---- | ----
-Get | GET | `{URL}/rest/menus/{restaurantID}/{ID}` | none | Only Admin
+Get | GET | `{URL}/rest/menus/{ID}/restaurants/{restaurantID}` | none | Only Admin
 Get All |GET |`{URL}/rest/menus` | none |Only Admin
-Delete  | DELETE | `{URL}/rest/menus/(ID}` | none | Only Admin
-Update | PUT | `{URL}/rest/menus/{restaurantID}/{ID}` | Update Body |Only Admin
-Create | POST | `{URL}/rest/menus/{restaurantID}` | Create Body | Only Admin
-Find by date | GET | `{URL}/rest/dishes/byDate` | none | Not Authorized
-Find by restaurant | GET | `{URL}/rest/dishes/byRestaurant/{restaurantID}` | none | Only Admin
+Delete  | DELETE | `{URL}/rest/menus/{ID}/restaurants/{restaurantID}` | none | Only Admin
+Update | PUT | `{URL}/rest/menus/{ID}/restaurants/{restaurantID}` | Update Body |Only Admin
+Create | POST | `{URL}/rest/menus/restaurants/{restaurantID}` | Create Body | Only Admin
+Find by date | GET | `{URL}/rest/dishes/byDate?date=[yyyy-MM-dd]` | none | Not Authorized
+Find by restaurant | GET | `{URL}/rest/dishes/byRestaurant?restaurant_id=[restaurantID]` | none | Only Admin
 
 ## Bodies
 #### Update Body
 ```json
 {
-    "date": "2019-09-15"
+    "date": "2019-09-15",
+    "dishes": [{
+        "name": "update dish",
+        "price": 100000
+        }]
 }
 ```
 
 #### Create Body
 ```json
 {
-    "date"  : "2019-09-15"
+    "date"  : "2019-09-15",
+    "dishes": [{
+        "name": "name dish",
+        "price": 100000
+        }]
 }
 ```
 

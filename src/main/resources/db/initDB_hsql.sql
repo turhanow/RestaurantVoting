@@ -64,4 +64,4 @@ CREATE TABLE vote
     CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT menu_id_fk FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX unique_vote ON vote (user_id, vote_date);
+CREATE UNIQUE INDEX unique_vote ON vote (vote_date, user_id);

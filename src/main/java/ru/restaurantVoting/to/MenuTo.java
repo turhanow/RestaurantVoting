@@ -11,7 +11,7 @@ public class MenuTo extends BaseTo {
     private LocalDate date;
 
     @NotNull
-    private Dish[] menu;
+    private Dish[] dishes;
 
     public MenuTo() {
     }
@@ -19,7 +19,7 @@ public class MenuTo extends BaseTo {
     public MenuTo(Integer id, LocalDate date, Dish... dishes) {
         super(id);
         this.date = date;
-        this.menu = dishes;
+        this.dishes = dishes;
     }
 
     public LocalDate getDate() {
@@ -30,12 +30,12 @@ public class MenuTo extends BaseTo {
         this.date = date;
     }
 
-    public Dish[] getMenu() {
-        return menu;
+    public Dish[] getDishes() {
+        return dishes;
     }
 
-    public void setMenu(Dish... menu) {
-        this.menu = menu;
+    public void setDishes(Dish... dishes) {
+        this.dishes = dishes;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MenuTo extends BaseTo {
         return "MenuTo{" +
                 "id=" + id +
                 ", date=" + date +
-                ", menu=" + menu +
+                ", dishes=" + dishes +
                 '}';
     }
 }

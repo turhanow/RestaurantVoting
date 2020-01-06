@@ -29,7 +29,11 @@ public class MenuRepositoryImpl {
     }
 
     public Menu get(int id, int restaurant_id) {
-        return menuRepository.get(id, restaurant_id);
+        return menuRepository.get(id, restaurant_id).orElse(null);
+    }
+
+    public Menu findByRestaurantAndDate(String name, LocalDate date) {
+        return menuRepository.findByRestaurantAndDate(name, date).orElse(null);
     }
 
     public Menu findById(int id) {
@@ -40,8 +44,8 @@ public class MenuRepositoryImpl {
         return menuRepository.findByDate(date);
     }
 
-    public List<Menu> findByRestaurant(int restaurant_id) {
-        return menuRepository.findByRestaurant(restaurant_id);
+    public List<Menu> findByRestaurant(String name) {
+        return menuRepository.findByRestaurant(name);
     }
 
     public boolean delete(int id, int restaurant_id) {

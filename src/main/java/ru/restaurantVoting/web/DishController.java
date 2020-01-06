@@ -17,6 +17,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.restaurantVoting.util.DishUtil.dishFromTo;
 import static ru.restaurantVoting.util.ValidationUtil.assureIdConsistent;
 import static ru.restaurantVoting.util.ValidationUtil.checkNew;
 
@@ -26,6 +27,7 @@ public class DishController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public static final String REST_URL = "/rest/dishes";
+    public static final String MENUS_URL = "/menus/";
 
     @Autowired
     private DishService service;
@@ -36,36 +38,36 @@ public class DishController {
         return service.getAll();
     }
 
-    @GetMapping("/{menuId}/{id}")
+    @GetMapping("/{id}" + MENUS_URL + "{menuId}")
     public Dish get(@PathVariable int id, @PathVariable int menuId) {
         log.info("get {} for menuId={}", id, menuId);
         return service.get(id, menuId);
     }
 
-    @PostMapping(value = "/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = MENUS_URL + "{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@Validated @RequestBody DishTo dishTo, @PathVariable int menuId) {
         log.info("create {} for menuId={}", dishTo, menuId);
         checkNew(dishTo);
-        Dish created = service.create(new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice()), menuId);
+        Dish created = service.create(dishFromTo(dishTo), menuId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{menuId}/{id}")
+                .path(REST_URL + "/{id}/menus/{menuId}")
                 .buildAndExpand(menuId, created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @DeleteMapping("/{menuId}/{id}")
+    @DeleteMapping("/{id}" + MENUS_URL + "{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id, @PathVariable int menuId) {
         log.info("delete {} for menuId={}", id, menuId);
         service.delete(id, menuId);
     }
 
-    @PutMapping(value = "/{menuId}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}" + MENUS_URL + "{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@Validated @RequestBody DishTo dishTo, @PathVariable int id, @PathVariable int menuId) {
         log.info("update {} with id={} for menuId={}", dishTo, id, menuId);
         assureIdConsistent(dishTo, id);
-        service.update(new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice()), menuId);
+        service.update(dishFromTo(dishTo), menuId);
     }
 
     @GetMapping("/by")
@@ -74,7 +76,7 @@ public class DishController {
         return service.findByDate(date);
     }
 
-    @GetMapping("/{menuId}")
+    @GetMapping(MENUS_URL + "{menuId}")
     public List<Dish> findByMenu(@PathVariable int menuId) {
         log.info("findByMenu {}", menuId);
         return service.findByMenu(menuId);
