@@ -1,6 +1,8 @@
 package ru.restaurantVoting.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Sort;
@@ -9,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.restaurantVoting.model.User;
 import ru.restaurantVoting.repository.UserRepository;
@@ -34,11 +35,13 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public User create(User user) {
         Assert.notNull(user, "user must not be null");
         return repository.save(prepareToSave(user, passwordEncoder));
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         checkNotFoundWithId(repository.delete(id) != 0, id);
     }
@@ -47,6 +50,7 @@ public class UserService implements UserDetailsService {
         return checkNotFoundWithId(repository.findById(id).orElse(null), id);
     }
 
+    @Cacheable("users")
     public User getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
         return checkNotFound(repository.getByEmail(email), "email=" + email);
@@ -56,16 +60,10 @@ public class UserService implements UserDetailsService {
         return repository.findAll(SORT_NAME_EMAIL);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.getId());
-    }
-
-    @Transactional
-    public void enable(int id, boolean enable) {
-        User user = get(id);
-        user.setEnabled(enable);
-        repository.save(user);
     }
 
     @Override
