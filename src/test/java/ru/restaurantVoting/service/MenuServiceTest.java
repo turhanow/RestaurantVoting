@@ -75,8 +75,14 @@ class MenuServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void getWithDishesByDate() throws Exception {
+        Menu menu = service.get(MENU_ID_1, RESTAURANT_ID_1);
+        assertMatch(menu, MENU_1);
+    }
+
+    @Test
     void findByDate() throws Exception {
-        List<Menu> menuList = service.findByDate(LocalDate.now());
+        List<Menu> menuList = service.findByDateWithDishes(LocalDate.now());
         assertMatch(menuList, MENU_3, MENU_4);
 
         List<Dish> actualDishes = new ArrayList<>();

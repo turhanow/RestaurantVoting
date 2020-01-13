@@ -100,6 +100,7 @@ or
         ]
 }
 ```
++ [Curl samples for Profile API](curls.md#Curls for profile api:)
 
 ## Restaurant API
 
@@ -112,6 +113,7 @@ Get All |GET |`{URL}/rest/restaurants` | none |Only Admin
 Delete  | DELETE | `{URL}/rest/restaurants/(ID}` | none | Only Admin
 Update | PUT | `{URL}/rest/restaurants/{ID}` | Update Body |Only Admin
 Create | POST | `{URL}/rest/restaurants` | Create Body | Only Admin
+Find by name | GET | `{URL}/rest/restaurants/by?name=[name]` | none | Only Admin
 
 ## Bodies
 #### Update Body
@@ -127,6 +129,7 @@ Create | POST | `{URL}/rest/restaurants` | Create Body | Only Admin
     "name": "New restaurant"
 }
 ```
++ [Curl samples for Restaurants API](curls.md#Curls for  Restaurants:)
 
 ## Dishes API
 
@@ -158,6 +161,7 @@ Find by dishes | GET | `{URL}/rest/dishes/menus/{menuID}` | none | Only Admin
     "price" :  10000
 }
 ```
++ [Curl samples for Dishes API](curls.md#Curls for  Dishes:)
 
 ## Menus API
 
@@ -170,31 +174,26 @@ Get All |GET |`{URL}/rest/menus` | none |Only Admin
 Delete  | DELETE | `{URL}/rest/menus/{ID}/restaurants/{restaurantID}` | none | Only Admin
 Update | PUT | `{URL}/rest/menus/{ID}/restaurants/{restaurantID}` | Update Body |Only Admin
 Create | POST | `{URL}/rest/menus/restaurants/{restaurantID}` | Create Body | Only Admin
-Find by date | GET | `{URL}/rest/dishes/byDate?date=[yyyy-MM-dd]` | none | Not Authorized
-Find by restaurant | GET | `{URL}/rest/dishes/byRestaurant?restaurant_id=[restaurantID]` | none | Only Admin
+Find by date with dishes| GET | `{URL}/rest/menus/byDate?date=[yyyy-MM-dd]` | none | Not Authorized
+Find by restaurant | GET | `{URL}/rest/menus/byRestaurant?name=[name]` | none | Only Admin
+Find by restaurant and date | GET | `{URL}/rest/menus/byRestaurantAndDate?name=[name]&date=[yyyy-MM-dd]` | none | Only Admin
+Find by id | GET | `{URL}/rest/menus/byId/byId?id=[id]` | none | Only Admin
 
 ## Bodies
 #### Update Body
 ```json
 {
-    "date": "2019-09-15",
-    "dishes": [{
-        "name": "update dish",
-        "price": 100000
-        }]
+    "date": "2019-09-15"
 }
 ```
 
 #### Create Body
 ```json
 {
-    "date"  : "2019-09-15",
-    "dishes": [{
-        "name": "name dish",
-        "price": 100000
-        }]
+    "date"  : "2019-09-15"
 }
 ```
++ [Curl samples for Menus API](curls.md#Curls for Menus:)
 
 ## Vote API
 
@@ -202,6 +201,8 @@ Find by restaurant | GET | `{URL}/rest/dishes/byRestaurant?restaurant_id=[restau
 
 Description | Method | URL | Body | User
 ----------- | ------ | --- | ---- | ----
-Get All  |GET |`{URL}/rest/votes` | none |Only Admin
-Get All by date  |GET |`{URL}/rest/votes/byDate` | none |Only Admin
-Vote  |POST |`{URL}/rest/votes/{menuID}` | none |Authorized
+Get All by date  |GET |`{URL}/rest/votes/byDate?date=[yyyy-MM-dd]` | none |Only Admin
+Create Vote for menu  |POST |`{URL}/rest/votes/menus/{menuID}` | none |Authorized
+Update Vote for menu  |PUT |`{URL}/rest/votes/menus/{menuID}` | none |Authorized
+
++ [Curl samples for Votes API](curls.md#Curls for Votes:)

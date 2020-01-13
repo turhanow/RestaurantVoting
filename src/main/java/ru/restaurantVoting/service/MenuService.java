@@ -10,7 +10,6 @@ import ru.restaurantVoting.repository.menu.MenuRepositoryImpl;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import static ru.restaurantVoting.util.ValidationUtil.checkNotFound;
 import static ru.restaurantVoting.util.ValidationUtil.checkNotFoundWithId;
@@ -52,11 +51,9 @@ public class MenuService {
     }
 
     @Cacheable("menusByDate")
-    public List<Menu> findByDate(LocalDate date) {
-        if (Objects.isNull(date)) {
-            date = LocalDate.now();
-        }
-        return repository.findByDate(date);
+    public List<Menu> findByDateWithDishes(LocalDate date) {
+        Assert.notNull(date, "date must not be null");
+        return repository.findByDateWithDishes(date);
     }
 
     public List<Menu> findByRestaurant(String name) {

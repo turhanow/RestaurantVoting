@@ -25,9 +25,6 @@ public class VoteRepositoryImpl {
 
     @Transactional
     public Vote save(Vote vote, int userId, int menuId) {
-        if (!vote.isNew() && get(vote.getId(), userId, menuId) == null) {
-            return null;
-        }
         vote.setUser(userRepository.getOne(userId));
         vote.setMenu(menuRepository.getOne(menuId));
         return voteRepository.save(vote);

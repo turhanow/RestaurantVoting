@@ -22,7 +22,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT m FROM Menu m WHERE m.date=:date")
-    List<Menu> findByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
+    List<Menu> findByDateWithDishes(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
 
     @Query("SELECT m FROM Menu m WHERE m.restaurant.name=:name")
     List<Menu> findByRestaurant(@Param("name") String name);

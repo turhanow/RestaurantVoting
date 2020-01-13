@@ -17,8 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.restaurantVoting.TestUtil.readFromJson;
 import static ru.restaurantVoting.TestUtil.userHttpBasic;
-import static ru.restaurantVoting.data.DishTestData.DISH_1;
-import static ru.restaurantVoting.data.DishTestData.DISH_3;
 import static ru.restaurantVoting.data.MenuTestData.assertMatch;
 import static ru.restaurantVoting.data.MenuTestData.contentJson;
 import static ru.restaurantVoting.data.MenuTestData.*;
@@ -62,19 +60,18 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        MenuTo menuTo = new MenuTo(null, LocalDate.of(3000, 1, 1), DISH_1, DISH_3);
+        MenuTo menuTo = new MenuTo(null, LocalDate.of(3000, 1, 1));
         ResultActions action = mockMvc.perform(MockMvcRequestBuilders.post(REST_URL + RESTAURANT_URL + RESTAURANT_ID_2)
                 .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(menuTo)))
+                .andDo(print())
                 .andExpect(status().isCreated());
 
         Menu returned = readFromJson(action, Menu.class);
         menuTo.setId(returned.getId());
 
         Menu expected = menuFromTo(menuTo);
-        expected.setRestaurant(RESTAURANT_2);
-        assertMatch(returned, menuFromTo(menuTo));
         assertMatch(menuService.getAll(), MENU_1, MENU_2, MENU_5, MENU_3, MENU_4, expected);
     }
 
@@ -97,7 +94,7 @@ class MenuControllerTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        MenuTo updated = new MenuTo(MENU_ID_1, LocalDate.of(3000, 1, 1), DISH_1, DISH_3);
+        MenuTo updated = new MenuTo(MENU_ID_1, LocalDate.of(3000, 1, 1));
         mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + MENU_ID_1 + RESTAURANT_URL + RESTAURANT_ID_1)
                 .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,7 +1,5 @@
 package ru.restaurantVoting.to;
 
-import ru.restaurantVoting.model.Dish;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -10,16 +8,13 @@ public class MenuTo extends BaseTo {
     @NotNull
     private LocalDate date;
 
-    @NotNull
-    private Dish[] dishes;
 
     public MenuTo() {
     }
 
-    public MenuTo(Integer id, LocalDate date, Dish... dishes) {
+    public MenuTo(Integer id, LocalDate date) {
         super(id);
         this.date = date;
-        this.dishes = dishes;
     }
 
     public LocalDate getDate() {
@@ -30,20 +25,11 @@ public class MenuTo extends BaseTo {
         this.date = date;
     }
 
-    public Dish[] getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(Dish... dishes) {
-        this.dishes = dishes;
-    }
-
     @Override
     public String toString() {
         return "MenuTo{" +
                 "id=" + id +
                 ", date=" + date +
-                ", dishes=" + dishes +
                 '}';
     }
 }

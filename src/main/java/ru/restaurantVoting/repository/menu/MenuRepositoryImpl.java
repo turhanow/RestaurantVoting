@@ -40,8 +40,8 @@ public class MenuRepositoryImpl {
         return menuRepository.findById(id).orElse(null);
     }
 
-    public List<Menu> findByDate(LocalDate date) {
-        return menuRepository.findByDate(date);
+    public List<Menu> findByDateWithDishes(LocalDate date) {
+        return menuRepository.findByDateWithDishes(date);
     }
 
     public List<Menu> findByRestaurant(String name) {

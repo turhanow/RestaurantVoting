@@ -30,7 +30,6 @@ public class VoteTestData {
 
     public static void assertMatch(Iterable<Vote> actual, Iterable<Vote> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("user", "menu").isEqualTo(expected);
-        ;
     }
 
     public static ResultMatcher contentJson(Vote... expected) {

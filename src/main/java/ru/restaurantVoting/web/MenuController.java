@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.restaurantVoting.util.MenuUtil.menuFromTo;
 import static ru.restaurantVoting.util.ValidationUtil.assureIdConsistent;
@@ -44,7 +45,8 @@ public class MenuController {
         return menuService.get(id, restaurant_id);
     }
 
-    @PostMapping(value = "/restaurants/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    @PostMapping(value = RESTAURANT_URL + "{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody MenuTo menuTo, @PathVariable int restaurant_id) {
         log.info("create {} for id={}", menuTo, restaurant_id);
         checkNew(menuTo);
@@ -71,9 +73,10 @@ public class MenuController {
     }
 
     @GetMapping("/byDate")
-    public List<Menu> findByDate(@RequestParam LocalDate date) {
-        log.info("findByDate {}", date);
-        return menuService.findByDate(date);
+    public List<Menu> findByDateWithDishes(@RequestParam LocalDate date) {
+        date = Objects.isNull(date) ? LocalDate.now() : date;
+        log.info("findByDateWithDishes {}", date);
+        return menuService.findByDateWithDishes(date);
     }
 
     @GetMapping("/byRestaurant")
@@ -84,6 +87,7 @@ public class MenuController {
 
     @GetMapping("/byRestaurantAndDate")
     public Menu findByRestaurantAndDate(@RequestParam String name, @RequestParam LocalDate date) {
+        date = Objects.isNull(date) ? LocalDate.now() : date;
         log.info("findByRestaurantAndDate for name={} and date={}", name, date);
         return menuService.findByRestaurantAndDate(name, date);
     }
