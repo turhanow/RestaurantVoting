@@ -3,10 +3,13 @@ package ru.restaurantVoting.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.restaurantVoting.model.Menu;
-import ru.restaurantVoting.repository.menu.MenuRepositoryImpl;
+import ru.restaurantVoting.repository.MenuRepository;
+import ru.restaurantVoting.repository.RestaurantRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,38 +19,51 @@ import static ru.restaurantVoting.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MenuService {
+    private static final Sort SORT_DATE = new Sort(Sort.Direction.ASC, "date");
 
-    private final MenuRepositoryImpl repository;
+    private final MenuRepository repository;
+    private final RestaurantRepository restaurantRepository;
 
     @Autowired
-    public MenuService(MenuRepositoryImpl repository) {
+    public MenuService(MenuRepository repository, RestaurantRepository restaurantRepository) {
         this.repository = repository;
+        this.restaurantRepository = restaurantRepository;
     }
 
     @CacheEvict(value = "menusByDate", allEntries = true)
+    @Transactional
     public Menu create(Menu menu, int restaurant_id) {
         Assert.notNull(menu, "menu must not be null");
-        return repository.save(menu, restaurant_id);
+        if (!menu.isNew() && get(menu.getId(), restaurant_id) == null) {
+            return null;
+        }
+        menu.setRestaurant(restaurantRepository.getOne(restaurant_id));
+        return repository.save(menu);
     }
 
     @CacheEvict(value = "menusByDate", allEntries = true)
+    @Transactional
     public void update(Menu menu, int restaurant_id) {
         Assert.notNull(menu, "menu must not be null");
-        checkNotFoundWithId(repository.save(menu, restaurant_id), menu.getId());
+        menu.setRestaurant(restaurantRepository.getOne(restaurant_id));
+        checkNotFoundWithId(repository.save(menu), menu.getId());
     }
 
     public Menu get(int id, int restaurant_id) {
-        return checkNotFoundWithId(repository.get(id, restaurant_id), id);
+        return checkNotFoundWithId(repository.get(id, restaurant_id)
+                .orElse(null), id);
     }
 
     public Menu findByRestaurantAndDate(String name, LocalDate date) {
         Assert.notNull(name, "name must not be null");
         Assert.notNull(date, "date must not be null");
-        return checkNotFound(repository.findByRestaurantAndDate(name, date), "name=" + name + "and date=" + date);
+        return checkNotFound(repository.findByRestaurantAndDate(name, date)
+                .orElse(null), "name=" + name + "and date=" + date);
     }
 
     public Menu findById(int id) {
-        return checkNotFoundWithId(repository.findById(id), id);
+        return checkNotFoundWithId(repository.findById(id)
+                .orElse(null), id);
     }
 
     @Cacheable("menusByDate")
@@ -62,11 +78,12 @@ public class MenuService {
     }
 
     @CacheEvict(value = "menusByDate", allEntries = true)
+    @Transactional
     public void delete(int id, int restaurant_id) {
-        checkNotFoundWithId(repository.delete(id, restaurant_id), id);
+        checkNotFoundWithId(repository.delete(id, restaurant_id) != 0, id);
     }
 
     public List<Menu> getAll() {
-        return repository.getAll();
+        return repository.findAll(SORT_DATE);
     }
 }

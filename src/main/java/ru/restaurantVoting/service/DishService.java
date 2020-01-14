@@ -1,10 +1,13 @@
 package ru.restaurantVoting.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.restaurantVoting.model.Dish;
-import ru.restaurantVoting.repository.dish.DishRepositoryImpl;
+import ru.restaurantVoting.repository.DishRepository;
+import ru.restaurantVoting.repository.MenuRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,30 +17,44 @@ import static ru.restaurantVoting.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class DishService {
+    private static final Sort SORT_NAME_PRICE = new Sort(Sort.Direction.ASC, "name", "price");
 
-    private final DishRepositoryImpl repository;
+    private final DishRepository repository;
+
+    private MenuRepository menuRepository;
 
     @Autowired
-    public DishService(DishRepositoryImpl repository) {
+    public DishService(DishRepository repository, MenuRepository menuRepository) {
         this.repository = repository;
+        this.menuRepository = menuRepository;
     }
 
+    @Transactional
     public Dish create(Dish dish, int menuId) {
         Assert.notNull(dish, "dish must not be null");
-        return repository.save(dish, menuId);
+        if (!dish.isNew() && get(dish.getId(), menuId) == null) {
+            return null;
+        }
+        dish.setMenu(menuRepository.getOne(menuId));
+        return repository.save(dish);
     }
 
+    @Transactional
     public void update(Dish dish, int menuId) {
         Assert.notNull(dish, "dish must not be null");
-        checkNotFoundWithId(repository.save(dish, menuId), dish.getId());
+        dish.setMenu(menuRepository.getOne(menuId));
+        checkNotFoundWithId(repository.save(dish), dish.getId());
     }
 
+    @Transactional
     public void delete(int id, int menuId) {
-        checkNotFoundWithId(repository.delete(id, menuId), id);
+        checkNotFoundWithId(repository.delete(id, menuId) != 0, id);
     }
 
     public Dish get(int id, int menuId) {
-        return checkNotFoundWithId(repository.get(id, menuId), id);
+        return checkNotFoundWithId(repository.findById(id)
+                .filter(d -> d.getMenu().getId() == menuId)
+                .orElse(null), id);
     }
 
     public List<Dish> findByDate(LocalDate date) {
@@ -45,7 +62,6 @@ public class DishService {
         List<Dish> dishList = repository.findByDate(date);
         checkNotFound(!dishList.isEmpty(), date.toString());
         return dishList;
-
     }
 
     public List<Dish> findByMenu(int menuId) {
@@ -55,6 +71,6 @@ public class DishService {
     }
 
     public List<Dish> getAll() {
-        return repository.getAll();
+        return repository.findAll(SORT_NAME_PRICE);
     }
 }

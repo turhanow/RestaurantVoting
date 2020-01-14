@@ -1,4 +1,4 @@
-package ru.restaurantVoting.repository.dish;
+package ru.restaurantVoting.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
